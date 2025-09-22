@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model app_users {
+  id            Int       @id @default(autoincrement())
+  full_name     String    @db.VarChar(255)
+  email         String    @unique @db.VarChar(255)
+  password_hash String    @db.VarChar(255)
+  user_role     String?   @default("partner") @db.VarChar(50)
+  is_active     Boolean?  @default(true)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([email], map: "idx_app_users_email")
+}
+
+model contacts {
+  id                                                  Int          @id @default(autoincrement())
+  full_name                                           String       @db.VarChar(255)
+  company_name                                        String?      @db.VarChar(255)
+  contact_type                                        String       @db.VarChar(50)
+  phone_number                                        String?      @db.VarChar(20)
+  email                                               String?      @db.VarChar(255)
+  created_at                                          DateTime?    @default(now()) @db.Timestamptz(6)
+  properties_properties_builder_contact_idTocontacts  properties[] @relation("properties_builder_contact_idTocontacts")
+  properties_properties_sourcing_contact_idTocontacts properties[] @relation("properties_sourcing_contact_idTocontacts")
+
+  @@index([company_name], map: "idx_contacts_company_name")
+  @@index([contact_type], map: "idx_contacts_contact_type")
+}
+
+model developments {
+  id                    Int          @id @default(autoincrement())
+  name                  String       @unique @db.VarChar(255)
+  city                  String?      @db.VarChar(100)
+  location_zone         String?      @db.VarChar(100)
+  common_amenities_json Json?
+  created_at            DateTime?    @default(now()) @db.Timestamptz(6)
+  properties            properties[]
+
+  @@index([city], map: "idx_developments_city")
+  @@index([location_zone], map: "idx_developments_location_zone")
+}
+
+model properties {
+  id                                                Int           @id @default(autoincrement())
+  listing_id                                        String?       @unique @db.VarChar(100)
+  development_id                                    Int?
+  builder_contact_id                                Int?
+  sourcing_contact_id                               Int?
+  property_name                                     String        @db.VarChar(255)
+  description                                       String?
+  property_type                                     String        @db.VarChar(50)
+  property_status                                   String        @db.VarChar(50)
+  listing_status                                    String?       @default("available") @db.VarChar(50)
+  address                                           String?
+  city                                              String?       @default("Puebla") @db.VarChar(100)
+  location_zone                                     String?       @db.VarChar(100)
+  location_lat                                      Decimal?      @db.Decimal(10, 7)
+  location_lon                                      Decimal?      @db.Decimal(10, 7)
+  is_in_gated_community                             Boolean?      @default(false)
+  lot_area_sq_meters                                Decimal?      @db.Decimal(10, 2)
+  construction_area_sq_meters                       Decimal?      @db.Decimal(10, 2)
+  stories                                           Int?
+  bedrooms                                          Int?
+  bathrooms                                         Decimal?      @db.Decimal(3, 1)
+  studio                                            Boolean?      @default(false)
+  parking_slots                                     Int?
+  has_garage                                        Boolean?      @default(false)
+  has_patio                                         Boolean?      @default(false)
+  has_roof_garden                                   Boolean?      @default(false)
+  has_pool                                          Boolean?      @default(false)
+  price_mxn                                         Decimal       @db.Decimal(12, 2)
+  maintenance_fee_mxn                               Decimal?      @db.Decimal(10, 2)
+  nearby_pois_json                                  Json?
+  virtual_tour_url                                  String?
+  floor_plan_urls                                   Json?
+  build_date                                        DateTime?     @db.Date
+  gcs_image_urls                                    Json?
+  gcs_video_urls                                    Json?
+  last_updated_by_user_id                           Int?
+  created_at                                        DateTime?     @default(now()) @db.Timestamptz(6)
+  updated_at                                        DateTime?     @default(now()) @db.Timestamptz(6)
+  property_amenities_json                           Json?
+  contacts_properties_builder_contact_idTocontacts  contacts?     @relation("properties_builder_contact_idTocontacts", fields: [builder_contact_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  developments                                      developments? @relation(fields: [development_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  contacts_properties_sourcing_contact_idTocontacts contacts?     @relation("properties_sourcing_contact_idTocontacts", fields: [sourcing_contact_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([property_amenities_json], map: "idx_properties_amenities_gin", type: Gin)
+  @@index([bathrooms], map: "idx_properties_bathrooms")
+  @@index([bedrooms], map: "idx_properties_bedrooms")
+  @@index([builder_contact_id], map: "idx_properties_builder_id")
+  @@index([construction_area_sq_meters], map: "idx_properties_construction_area")
+  @@index([development_id], map: "idx_properties_development_id")
+  @@index([has_pool], map: "idx_properties_has_pool")
+  @@index([is_in_gated_community], map: "idx_properties_is_gated")
+  @@index([listing_status], map: "idx_properties_listing_status")
+  @@index([location_zone], map: "idx_properties_location")
+  @@index([nearby_pois_json], map: "idx_properties_nearby_pois_gin", type: Gin)
+  @@index([parking_slots], map: "idx_properties_parking_slots")
+  @@index([price_mxn], map: "idx_properties_price_mxn")
+  @@index([property_status], map: "idx_properties_property_status")
+  @@index([property_type], map: "idx_properties_property_type")
+}

@@ -1,0 +1,28 @@
+{
+  "cloudRunConfig": {
+    "serviceName": "sales-agent-frontend-prod",
+    "targetProject": "prj-sie-cor-salesauto-prod",
+    "region": "us-east4",
+    "source": "./app",
+    "cpu": "1",
+    "memory": "512Mi",
+    "concurrency": "80",
+    "timeout": "60",
+    "minInstances": "0",
+    "maxInstances": "2",
+    "vpcConnector": "projects/prj-sie-com-vpc-host-prod/locations/us-east4/connectors/sva-sie-use4-shared-prod",
+    "serviceAccount": "sales-agent-backend-sa-prod@prj-sie-cor-salesauto-prod.iam.gserviceaccount.com"
+  },
+  "envVars": {
+    "NEXT_PUBLIC_FIREBASE_API_KEY": "AIzaSyCo7N36KI7dlujmTm6spvBML7-uMY0gz4A",
+    "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN": "prj-sie-pla-sso-prod.firebaseapp.com",
+    "NEXT_PUBLIC_FIREBASE_PROJECT_ID": "prj-sie-pla-sso-prod",
+    "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET": "prj-sie-pla-sso-prod.firebasestorage.app",
+    "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "664251051278",
+    "NEXT_PUBLIC_FIREBASE_APP_ID": "1:664251051278:web:476f807907cbb673a7bb5f",
+    "NEXT_PUBLIC_FIREBASE_TENANT_ID": "siesa-corp-cctbw",
+    "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-18PZJF0NGX",
+    "NEXTAUTH_SECRET": "pXSnoze8stgqJlt3ADp8h64GMq5CZxYPsLgv9jI7kNk="
+
+  }
+}
