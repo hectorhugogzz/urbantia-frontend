@@ -65,7 +65,9 @@ const PropertyTable: React.FC<PropertyTableProps> = ({ properties }) => {
           {properties.map((property) => (
             <tr key={property.id} className="hover:bg-gray-50 transition-colors">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900">{property.property_name}</div>
+                <Link href={`/properties/view/${property.id}`} legacyBehavior>
+                  <a className="text-sm font-medium text-gray-900 hover:text-indigo-600">{property.property_name}</a>
+                </Link>
                 <div className="text-sm text-gray-500">{property.property_type}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.listing_id}</td>
